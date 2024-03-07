@@ -85,7 +85,7 @@ p {
 
 .message__author {
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: italic;
   color: #999;
   text-align: right;
 }
@@ -102,6 +102,11 @@ p {
 
 .message--self .message__content {
   background: #3498db;
+}
+
+.message--bot .message__content {
+  background: #2ecc71;
+  font-style: italic;
 }
 
 .show {

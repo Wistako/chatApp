@@ -7,25 +7,35 @@ const app = () => {
   const addMessageForm = document.getElementById('add-messages-form');
   const userNameInput = document.getElementById('username');
   const messageContentInput = document.getElementById('message-content');
+
+  const socket = io({
+    autoConnect: false
+  });
+  
+  socket.on('message', ({ author, content }) => addMessage(author, content));
   
   const login = (e) => {
     e.preventDefault(); 
     const userNameInputValue = userNameInput.value;
-    if(userNameInputValue === '') {
+    if(userNameInputValue === '' || userNameInputValue === 'ChatBot') {
       alert('Wpisz swoje imię');
     } else {
       userName = userNameInputValue;
       loginForm.classList.remove('show');
       messagesSection.classList.add('show');
+      socket.open();
+      socket.emit('join', { user: userName });
     }
   };
 
   const sendMessage = (e) => {
     e.preventDefault();
-    if(messageContentInput.value === '') {
+    const messageContent = messageContentInput.value;
+    if(messageContent === '') {
       alert('Wpisz treść wiadomości');
     } else {
-      addMessage(userName, messageContentInput.value);
+      addMessage(userName, messageContent);
+      socket.emit('message', { author: userName, content: messageContent });
       messageContentInput.value = '';
     }
   };
@@ -35,6 +45,7 @@ const app = () => {
     message.classList.add('message');
     message.classList.add('message--received');
     if(author === userName) message.classList.add('message--self');
+    if(author === 'ChatBot') message.classList.add('message--bot');
     message.innerHTML = `
       <h3 class="message__author">${userName === author ? 'You' : author }</h3>
       <div class="message__content">
