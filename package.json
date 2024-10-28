@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "nodemon server.js",
-    "start:prod": "node server.js"
+    "start:prod": "node server.js",
+    "build": "npm install"
   }
 }
